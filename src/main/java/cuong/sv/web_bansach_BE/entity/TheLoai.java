@@ -21,7 +21,7 @@ public class TheLoai {
 
     })
     @JoinTable(
-            name = "sach_danhsachtheloai"
+            name = "sach_theloai"
             , joinColumns = @JoinColumn(name = "ma_the_loai")
             ,inverseJoinColumns = @JoinColumn(name = "ma_sach")
     )
