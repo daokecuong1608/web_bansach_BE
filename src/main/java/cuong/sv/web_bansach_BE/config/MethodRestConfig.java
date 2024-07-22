@@ -14,17 +14,24 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class MethodRestConfig implements RepositoryRestConfigurer {
 
+    //cấu url dẫn FE
+    private String url = "http://localhost:3000";
 
     @Autowired
     private EntityManager entityManager;
 
-    private String url = "http://localhost:8080";
+//    private String url = "http://localhost:8080";
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
-        //expose ids
-        //cho phep tra ve id
+        // expose ids : cho phep tra ve id
         config.exposeIdsFor(entityManager.getMetamodel().getEntities().stream().map(Type::getJavaType).toArray(Class[]::new));
+
+        //CORS configuration
+        // Cấu hình đư��ng d��n FE
+        cors.addMapping("/**")//tất cả các đường dẫn
+                .allowedOrigins(url)
+                .allowedMethods("GET", "POST", "PUT", "DELETE");
 
         //chan cac methods
         HttpMethod[] chanCacPhuongThuc = {
@@ -41,9 +48,10 @@ public class MethodRestConfig implements RepositoryRestConfigurer {
         };
         disableHttpMethods(NguoiDung.class, config, phuongThucDelete);
 
+
     }
 
-    private void disableHttpMethods(Class c, RepositoryRestConfiguration config, HttpMethod[] httpMethods) {
-        config.getExposureConfiguration().forDomainType(c);
+    private void disableHttpMethods(Class c, RepositoryRestConfiguration config, HttpMethod[] methods) {
+        config.getExposureConfiguration().forDomainType(c).withItemExposure(((metdata, httpMethods) -> httpMethods.disable(methods)));
     }
 }
