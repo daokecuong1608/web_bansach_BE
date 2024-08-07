@@ -17,6 +17,8 @@ public class TaiKhoanController {
     @Autowired
     private TaiKhoanService service;
 
+    //cho phép truy cập gọi trực tiếp từ phiá server
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/dang-ky")
     public ResponseEntity<?> dangKyNguoiDung(@Validated @RequestBody NguoiDung nguoiDung) {
         ResponseEntity<?> response = service.dangKyNguoiDung(nguoiDung);
