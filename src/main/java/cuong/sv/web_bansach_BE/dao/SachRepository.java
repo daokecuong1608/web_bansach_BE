@@ -17,4 +17,7 @@ Page<Sach> findByTenSachContaining(@RequestParam("tenSach")String tenSach , Page
 
  Page<Sach> findByTenSachContainingAndDanhSachTheLoai_MaTheLoai(@RequestParam("tenSach")String tenSach ,@RequestParam("maTheLoai")int maTheLoai , Pageable pageable);
 
+ public  boolean existsByTenSach(String tenSach);
+
+ public boolean existsByISBN(String ISBN);
 }

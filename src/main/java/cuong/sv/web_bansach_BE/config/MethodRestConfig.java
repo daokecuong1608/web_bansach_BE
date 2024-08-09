@@ -29,9 +29,9 @@ public class MethodRestConfig implements RepositoryRestConfigurer {
 
         //CORS configuration
         // Cấu hình đư��ng d��n FE
-        cors.addMapping("/**")//tất cả các đường dẫn
-                .allowedOrigins(url)
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
+//        cors.addMapping("/**")//tất cả các đường dẫn
+//                .allowedOrigins(url)
+//                .allowedMethods("GET", "POST", "PUT", "DELETE");
 
 //        //chan cac methods
 //        HttpMethod[] chanCacPhuongThuc = {

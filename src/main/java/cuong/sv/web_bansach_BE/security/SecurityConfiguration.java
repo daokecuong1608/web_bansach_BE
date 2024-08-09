@@ -10,8 +10,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 
-@Configuration//đánh dấu là nguồn cấu hình cho ứng dụng. Lớp này sẽ chứa các định nghĩa bean mà Spring sẽ quản lý và khởi tạo.
+import java.util.Arrays;
+
+@Configuration
+//đánh dấu là nguồn cấu hình cho ứng dụng. Lớp này sẽ chứa các định nghĩa bean mà Spring sẽ quản lý và khởi tạo.
 public class SecurityConfiguration {
 
     //Bean cho mã hóa mật khẩu dùng BCrypt
@@ -34,17 +38,23 @@ public class SecurityConfiguration {
     //SecurityFilterChain => được sử dụng để cấu hình các chuỗi bộ lọc bảo mật cho ứng dụng.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      //authorizeHttpRequests => một phương thức cấu hình bảo mật trong Spring Security
+        //authorizeHttpRequests => một phương thức cấu hình bảo mật trong Spring Security
         http.authorizeHttpRequests(
                 //authorizeHttpRequests được sử dụng để cấu hình các quy tắc ủy quyền.
                 configurer -> configurer
-                        .requestMatchers(HttpMethod.GET, "/sach").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/sach/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/hinh-anh/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/nguoi-dung").hasAnyAuthority("ADMIN", "STAFF")
-                        .requestMatchers(HttpMethod.GET, "/tai-khoan/dang-ky").permitAll()
-
+                        .requestMatchers(HttpMethod.GET, Endpoints.PUBLIC_GET_ENDPOIN).permitAll()
+                        .requestMatchers(HttpMethod.POST, Endpoints.PUBLIC_POST_ENDPOIN).permitAll()
+                        .requestMatchers(HttpMethod.GET, Endpoints.ADMIN_GET_ENDPOIN).hasAuthority("ADMIN")
         );
+        http.cors(cors -> {
+                    cors.configurationSource(request -> {
+                        CorsConfiguration corsConfig = new CorsConfiguration();
+                        corsConfig.addAllowedOrigin(Endpoints.front_end_host);
+                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                        corsConfig.addAllowedHeader("*");
+                        return corsConfig;
+                    });
+                });
 // được sử dụng để kích hoạt xác thực HTTP Basic với các cấu hình mặc định.
         //Customizer.withDefaults() chỉ định rằng không có tùy chỉnh nào được áp dụng
         http.httpBasic(Customizer.withDefaults());

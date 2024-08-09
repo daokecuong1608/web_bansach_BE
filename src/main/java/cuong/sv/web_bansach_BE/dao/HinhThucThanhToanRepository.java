@@ -6,4 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(path = "hinh-thuc-thanh-toan")
 public interface HinhThucThanhToanRepository extends JpaRepository<HinhThucThanhToan , Integer> {
+
+    public  boolean existsByTenHinhThucThanhToan(String tenHinhThucThanhToan);
+
 }

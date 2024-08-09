@@ -5,11 +5,13 @@ import cuong.sv.web_bansach_BE.entity.NguoiDung;
 import cuong.sv.web_bansach_BE.entity.ThongBao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service // xử lý các logic(phục vụ bên trên server)
 public class TaiKhoanService {
-
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private NguoiDungRepository nguoiDungRepository;
 
@@ -24,6 +26,11 @@ public class TaiKhoanService {
         if (nguoiDungRepository.existsByTenDangNhap(nguoiDung.getEmail())) {
             return ResponseEntity.badRequest().body(new ThongBao("Email đã tồn tại."));
         }
+
+        //mã hóa mật khẩu
+        String encryptPassword = passwordEncoder.encode(nguoiDung.getMatKhau());
+        nguoiDung.setMatKhau(encryptPassword);
+
         //lưu người dùng vào cơ sở dữ liệu
         NguoiDung nguoiDung_daDangKy = nguoiDungRepository.save(nguoiDung);
         return ResponseEntity.ok("Đăng ký thành công");
